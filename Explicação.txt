@@ -1,0 +1,59 @@
+1. Bubble Sort (Ordenação por Bolha)
+É um algoritmo de ordenação simples.
+
+Funciona comparando pares de elementos adjacentes e trocando-os de lugar se estiverem na ordem errada.
+
+Esse processo se repete várias vezes até que o array fique totalmente ordenado.
+
+Exemplo:
+
+Imagine uma fila de números: [5, 3, 8, 4]
+
+Compara 5 e 3, troca porque 5 > 3 → [3, 5, 8, 4]
+
+Compara 5 e 8, não troca
+
+Compara 8 e 4, troca → [3, 5, 4, 8]
+
+Repete até estar tudo ordenado.
+
+2. Merge Sort (Ordenação por Intercalação)
+É um algoritmo de ordenação mais eficiente que o Bubble Sort.
+
+Usa o método “dividir para conquistar”:
+
+Divide o array em duas metades até cada parte ter um elemento.
+
+Depois, junta (merge) essas partes ordenadas em um array maior ordenado.
+
+Tem complexidade O(n log n), muito melhor para arrays grandes.
+
+Exemplo:
+
+Para ordenar [5, 3, 8, 4]:
+
+Divide em [5,3] e [8,4]
+
+Divide [5,3] em [5] e [3], ordena e junta → [3,5]
+
+Divide [8,4] em [8] e [4], ordena e junta → [4,8]
+
+Junta [3,5] e [4,8] → [3,4,5,8]
+
+3. Busca em Largura (BFS - Breadth-First Search)
+É um algoritmo para percorrer ou buscar em estruturas de dados como grafos ou árvores.
+
+Começa em um nó (ponto) inicial e explora todos os seus vizinhos antes de ir para os vizinhos dos vizinhos.
+
+Usado para encontrar o caminho mais curto em grafos não ponderados, ou explorar níveis de uma árvore.
+
+Exemplo:
+
+Imagine uma rede de amigos:
+
+Você começa no amigo A.
+
+Primeiro visita todos os amigos diretos de A.
+
+Depois, visita os amigos dos amigos, e assim por diante.
+

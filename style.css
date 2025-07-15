@@ -1,0 +1,109 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Titulo */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #1e88e5;
+}
+
+/* Controles (select e botoes) */
+select, button {
+  padding: 10px 15px;
+  margin: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #1e88e5;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+select {
+  background-color: #ffffff;
+  color: #333;
+  border: 2px solid #1e88e5;
+}
+
+button:hover {
+  background-color: #1565c0;
+}
+
+#visualizacao {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 300px;
+  margin-top: 30px;
+  width: 90%;
+  border: 2px dashed #ccc;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+/* Cada barra do array */
+.barra {
+  width: 20px;
+  background: #1e88e5;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .barra {
+    width: 10px;
+  }
+
+  select, button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* novo codigo */
+
+/* para barra de pilha */
+#visualizacao {
+  display: flex;
+  align-items: flex-end;
+  height: 300px;
+  gap: 2px;
+  margin-top: 20px;
+}
+
+.barra {
+  width: 20px;
+  background-color: teal;
+  transition: height 0.3s, background-color 0.3s;
+}
+
+.bloco-pilha {
+  width: 80px;
+  height: 30px;
+  background: #444;
+  color: #fff;
+  text-align: center;
+  margin: 5px auto;
+}
