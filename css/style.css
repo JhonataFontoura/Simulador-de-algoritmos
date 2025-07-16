@@ -1,109 +1,128 @@
+/* Reset básico: remove margens e paddings padrão, usa box-sizing border-box */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Estilo geral do corpo da página */
 body {
-  font-family: "Segoe UI", sans-serif;
-  background: #f0f2f5;
-  color: #333;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  font-family: "Segoe UI", sans-serif; /* fonte moderna e legível */
+  background: #f0f2f5; /* cor clara neutra para fundo */
+  color: #333; /* cor padrão do texto */
+  padding: 20px; /* espaçamento interno */
+  display: flex; /* usa flexbox para centralizar conteúdo */
+  flex-direction: column; /* alinhamento vertical */
+  align-items: center; /* centraliza horizontalmente */
 }
 
-/* Titulo */
+/* Estilo do título principal */
 h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: #1e88e5;
+  font-size: 2rem; /* tamanho maior */
+  margin-bottom: 20px; /* espaço abaixo do título */
+  color: #1e88e5; /* azul para destaque */
 }
 
-/* Controles (select e botoes) */
+/* Estilo dos controles (select e botão) */
 select, button {
-  padding: 10px 15px;
-  margin: 10px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 8px;
-  background-color: #1e88e5;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  padding: 10px 15px; /* espaçamento interno para toque confortável */
+  margin: 10px; /* espaçamento externo */
+  font-size: 1rem; /* tamanho da fonte */
+  border: none; /* sem borda padrão */
+  border-radius: 8px; /* cantos arredondados */
+  background-color: #1e88e5; /* azul forte */
+  color: white; /* texto branco */
+  cursor: pointer; /* cursor de mão ao passar */
+  transition: background-color 0.3s; /* transição suave na cor */
 }
 
+/* Estilo específico para select */
 select {
-  background-color: #ffffff;
-  color: #333;
-  border: 2px solid #1e88e5;
+  background-color: #ffffff; /* fundo branco */
+  color: #333; /* texto escuro */
+  border: 2px solid #1e88e5; /* borda azul */
 }
 
+/* Efeito hover no botão */
 button:hover {
-  background-color: #1565c0;
+  background-color: #1565c0; /* azul mais escuro ao passar */
 }
 
+/* Container da visualização dos blocos numéricos */
 #visualizacao {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 4px;
-  height: 300px;
-  margin-top: 30px;
-  width: 90%;
-  border: 2px dashed #ccc;
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 8px;
+  display: flex; /* flexbox para alinhar os blocos em linha */
+  align-items: center; /* alinhamento vertical central */
+  justify-content: center; /* centralizar horizontalmente */
+  gap: 6px; /* espaço entre os blocos */
+  height: 60px; /* altura fixa do container */
+  margin-top: 30px; /* espaço acima */
+  width: 90%; /* ocupa 90% da largura da tela */
+  border: 2px dashed #ccc; /* borda pontilhada cinza clara */
+  padding: 10px; /* espaçamento interno */
+  background-color: #fff; /* fundo branco */
+  border-radius: 8px; /* cantos arredondados */
+  user-select: none; /* impede seleção do texto */
+  vertical-align: middle; /* alinha verticalmente para separador */
 }
 
-/* Cada barra do array */
-.barra {
-  width: 20px;
-  background: #1e88e5;
-  border-radius: 4px 4px 0 0;
-  transition: height 0.3s ease;
+/* Cada bloco que exibe um número */
+.bloco-numero {
+  min-width: 30px; /* largura mínima */
+  padding: 8px 10px; /* espaçamento interno */
+  text-align: center; /* texto centralizado */
+  border-radius: 6px; /* cantos arredondados */
+  box-shadow: 0 0 4px rgba(0,0,0,0.15); /* sombra sutil */
+  font-family: Arial, sans-serif; /* fonte simples para números */
+  font-weight: bold; /* negrito */
+  font-size: 18px; /* tamanho da fonte */
+  cursor: default; /* cursor padrão (seta) */
+  transition: background-color 0.3s, color 0.3s; /* transição suave */
 }
 
-/* Responsividade */
+/* A cor de fundo e texto será definida dinamicamente via JS */
+
+/* Barra vertical separadora entre os dois lados */
+.separador-vertical {
+  width: 4px; /* largura fina */
+  height: 40px; /* altura da barra */
+  background-color: #444; /* cor cinza escuro */
+  display: inline-block; /* exibe como bloco em linha */
+  margin: 0 8px; /* margem lateral para espaçamento */
+  vertical-align: middle; /* alinha com blocos de número */
+  border-radius: 2px; /* cantos levemente arredondados */
+  box-shadow: 0 0 5px rgba(0,0,0,0.3); /* sombra para destaque */
+}
+
+/* Responsividade para telas menores */
 @media (max-width: 600px) {
-  .barra {
-    width: 10px;
+  /* Blocos menores para caber melhor */
+  .bloco-numero {
+    min-width: 20px;
+    padding: 6px 8px;
+    font-size: 14px;
   }
 
+  /* Botões e select com padding e fonte menores */
   select, button {
     padding: 8px 12px;
     font-size: 0.9rem;
   }
 
+  /* Título menor */
   h1 {
     font-size: 1.5rem;
   }
 }
 
-/* novo codigo */
-
-/* para barra de pilha */
-#visualizacao {
-  display: flex;
-  align-items: flex-end;
-  height: 300px;
-  gap: 2px;
-  margin-top: 20px;
-}
-
-.barra {
-  width: 20px;
-  background-color: teal;
-  transition: height 0.3s, background-color 0.3s;
-}
-
+/* Estilo para blocos da pilha (se usado) */
 .bloco-pilha {
   width: 80px;
   height: 30px;
-  background: #444;
-  color: #fff;
+  background: #444; /* fundo escuro */
+  color: #fff; /* texto branco */
   text-align: center;
   margin: 5px auto;
+  border-radius: 4px; /* cantos arredondados */
+  line-height: 30px; /* centraliza texto verticalmente */
+  font-weight: bold;
 }
