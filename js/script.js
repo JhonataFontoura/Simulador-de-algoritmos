@@ -1,63 +1,60 @@
-// Importa os algoritmos de ordenação, busca e estrutura de dados da pasta algoritmos
-import { bubbleSort, mergeSort } from './algoritmos/ordenacao.js';
+import { bubbleSortStep, mergeSortStep } from './algoritmos/ordenacao.js';
 import { buscaLinear } from './algoritmos/busca.js';
 import { Pilha } from './algoritmos/estrutura.js';
 
-// Gera um array aleatório de 20 números para testar os algoritmos
+/**
+ * Array principal usado para testes de algoritmos.
+ * Inicializado com valores aleatórios.
+ */
 let array = gerarArray(20);
-// Desenha inicialmente o array na tela
-desenharArray(array);
 
 /**
- * Gera um array com 'tamanho' números inteiros aleatórios entre 0 e 99
- * @param {number} tamanho - Quantidade de números no array (default 10)
- * @returns {number[]} Array com valores aleatórios
+ * Generator global para controlar o passo a passo.
+ * Inicialmente nulo.
+ * @type {AsyncGenerator|null}
+ */
+let generator = null;
+
+/**
+ * Gera um array de inteiros aleatórios entre 0 e 99.
+ * @param {number} tamanho - Tamanho do array.
+ * @returns {number[]} Array gerado.
  */
 function gerarArray(tamanho = 10) {
   return Array.from({ length: tamanho }, () => Math.floor(Math.random() * 100));
 }
 
 /**
- * Função para desenhar um array na tela, mostrando números dentro de blocos coloridos
- * @param {number[]} arr - Array de números para desenhar
- * @param {number} ativo - índice do elemento ativo (em destaque vermelho), default -1 (nenhum)
- * @param {number} inicio - índice início do intervalo destacado (lado esquerdo), default -1 (nenhum)
- * @param {number} fim - índice fim do intervalo destacado (lado direito), default -1 (nenhum)
- * @param {number} meio - índice onde colocamos o separador vertical
- * @param {object} lado - objeto com arrays 'esquerda' e 'direita' para colorir intervalos (ex: {esquerda: [...], direita: [...]})
+ * Desenha o array na tela com elementos destacados.
+ * @param {number[]} arr - Array de números.
+ * @param {number} [ativo=-1] - Índice ativo (vermelho).
+ * @param {number} [inicio=-1] - Início de subarray.
+ * @param {number} [fim=-1] - Fim de subarray.
+ * @param {number} [meio=-1] - Meio do array (separador).
+ * @param {object} [lado={}] - Esquerda/direita destacados.
  */
 function desenharArray(arr, ativo = -1, inicio = -1, fim = -1, meio = -1, lado = {}) {
   const area = document.getElementById("visualizacao");
-  area.innerHTML = ""; // limpa a visualização atual
+  area.innerHTML = "";
 
   arr.forEach((valor, i) => {
     const bloco = document.createElement("div");
-    bloco.className = "bloco-numero"; // aplica estilo do CSS
+    bloco.className = "bloco-numero";
+    bloco.innerText = valor;
 
-    bloco.innerText = valor; // exibe o número dentro do bloco
-
-    // Define cores diferentes conforme posição no array
     if (i === ativo) {
-      // Elemento ativo destacado em vermelho
       bloco.style.background = "red";
       bloco.style.color = "white";
     } else if (lado.esquerda?.includes(i)) {
-      // Lado esquerdo da divisão destacado em verde claro
       bloco.style.background = "#a8e6cf";
-      bloco.style.color = "#333";
     } else if (lado.direita?.includes(i)) {
-      // Lado direito da divisão destacado em laranja claro
       bloco.style.background = "#ffd3b6";
-      bloco.style.color = "#333";
     } else {
-      // Elementos neutros com fundo cinza claro
       bloco.style.background = "#eee";
-      bloco.style.color = "#333";
     }
 
     area.appendChild(bloco);
 
-    // Cria a barra separadora vertical após o índice 'meio'
     if (i === meio) {
       const separador = document.createElement("div");
       separador.className = "separador-vertical";
@@ -67,47 +64,85 @@ function desenharArray(arr, ativo = -1, inicio = -1, fim = -1, meio = -1, lado =
 }
 
 /**
- * Função para desenhar uma pilha visualmente (usada no algoritmo da pilha)
- * @param {number[]} arr - Array com valores da pilha
+ * Desenha a pilha verticalmente.
+ * @param {number[]} arr - Elementos da pilha.
  */
 function desenharPilha(arr) {
   const area = document.getElementById("visualizacao");
-  area.innerHTML = ""; // limpa visualização
-
-  arr.forEach((valor) => {
+  area.innerHTML = "";
+  arr.forEach(valor => {
     const bloco = document.createElement("div");
     bloco.className = "bloco-pilha";
-    bloco.innerText = valor; // mostra valor da pilha
+    bloco.innerText = valor;
     area.appendChild(bloco);
   });
 }
 
-// Configura o evento do botão "executar" para rodar o algoritmo selecionado
+/**
+ * Executa todos os passos de um async generator.
+ * @param {AsyncGenerator} generator - Generator do algoritmo.
+ */
+async function executarCompleto(generator) {
+  let res = await generator.next();
+  while (!res.done) {
+    res = await generator.next();
+  }
+}
+
+/**
+ * Evento do botão "Executar": Executa o algoritmo por completo.
+ */
 document.getElementById("executar").onclick = async () => {
   const tipo = document.getElementById("algoritmo").value;
-  console.log("Executando algoritmo:", tipo);
+  generator = null;
 
   if (tipo === "bubble") {
-    console.log("Chamado bubbleSort");
-    // Chama o bubbleSort passando uma cópia do array e a função desenharArray para animação
-    await bubbleSort([...array], desenharArray);
+    const gen = bubbleSortStep([...array], desenharArray, 300);
+    await executarCompleto(gen);
   } else if (tipo === "merge") {
-    console.log("Chamado mergeSort");
-    // Chama mergeSort com array e função desenharArray para animação
-    await mergeSort([...array], desenharArray);
+    const gen = mergeSortStep([...array], desenharArray, 300);
+    await executarCompleto(gen);
   } else if (tipo === "busca") {
-    console.log("Chamado buscaLinear");
-    // Busca linear para o valor do índice 5 do array, animando com desenharArray
     await buscaLinear([...array], array[5], desenharArray);
   } else if (tipo === "pilha") {
-    console.log("Manipulando pilha");
-    // Cria uma pilha, executa push e pop para demonstração visual
     const pilha = new Pilha(desenharPilha);
     pilha.push(10);
     pilha.push(20);
     pilha.pop();
     pilha.push(30);
   } else {
-    console.log("Nenhum algoritmo selecionado");
+    alert("Algoritmo ainda não implementado.");
   }
 };
+
+/**
+ * Evento do botão "Passo a Passo": Executa um passo por clique.
+ */
+document.getElementById("passo").onclick = async () => {
+  const tipo = document.getElementById("algoritmo").value;
+
+  if (tipo !== "bubble" && tipo !== "merge") {
+    alert("Passo a passo disponível apenas para Bubble Sort e Merge Sort.");
+    return;
+  }
+
+  if (!generator) {
+    generator = tipo === "bubble"
+      ? bubbleSortStep([...array], desenharArray, 0)
+      : mergeSortStep([...array], desenharArray, 0);
+  }
+
+  const { value, done } = await generator.next();
+
+  if (done) {
+    alert("Ordenação concluída!");
+    generator = null;
+    if (value) array = value;
+  } else if (value) {
+    array = value;
+  }
+};
+
+// Desenha o array inicial ao carregar
+desenharArray(array);
+
