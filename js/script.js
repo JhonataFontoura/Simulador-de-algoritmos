@@ -1,6 +1,7 @@
 import { bubbleSortStep, mergeSortStep } from './algoritmos/ordenacao.js';
 import { buscaLinear } from './algoritmos/busca.js';
 import { Pilha } from './algoritmos/estrutura.js';
+import { quickSortStep } from './algoritmos/ordenacao.js';
 
 /**
  * Array principal usado para testes de algoritmos.
@@ -79,14 +80,16 @@ function desenharPilha(arr) {
 }
 
 /**
- * Executa todos os passos de um async generator.
+ * Executa todos os passos de um async generator e retorna o resultado final.
  * @param {AsyncGenerator} generator - Generator do algoritmo.
+ * @returns {Promise<any>} Valor final do generator.
  */
 async function executarCompleto(generator) {
   let res = await generator.next();
   while (!res.done) {
     res = await generator.next();
   }
+  return res.value;
 }
 
 /**
@@ -98,10 +101,12 @@ document.getElementById("executar").onclick = async () => {
 
   if (tipo === "bubble") {
     const gen = bubbleSortStep([...array], desenharArray, 300);
-    await executarCompleto(gen);
+    array = await executarCompleto(gen);
+    desenharArray(array);
   } else if (tipo === "merge") {
     const gen = mergeSortStep([...array], desenharArray, 300);
-    await executarCompleto(gen);
+    array = await executarCompleto(gen);
+    desenharArray(array);
   } else if (tipo === "busca") {
     await buscaLinear([...array], array[5], desenharArray);
   } else if (tipo === "pilha") {
@@ -110,9 +115,24 @@ document.getElementById("executar").onclick = async () => {
     pilha.push(20);
     pilha.pop();
     pilha.push(30);
+  } else if (tipo === "quick") {
+    const gen = quickSortStep([...array], desenharArray, 300);
+    array = await executarCompleto(gen);
+    desenharArray(array);
   } else {
     alert("Algoritmo ainda não implementado.");
   }
+};
+
+/**
+ * Mapeamento dos algoritmos disponíveis com suporte a passo a passo
+ */
+const algoritmosPassoAPasso = {
+  bubble: (arr) => bubbleSortStep(arr, desenharArray, 0),
+  merge: (arr) => mergeSortStep(arr, desenharArray, 0),
+  quick: (arr) => quickSortStep(arr, desenharArray, 0),
+  // Exemplo futuro:
+  // heap: (arr) => heapSortStep(arr, desenharArray, 0),
 };
 
 /**
@@ -121,15 +141,13 @@ document.getElementById("executar").onclick = async () => {
 document.getElementById("passo").onclick = async () => {
   const tipo = document.getElementById("algoritmo").value;
 
-  if (tipo !== "bubble" && tipo !== "merge") {
-    alert("Passo a passo disponível apenas para Bubble Sort e Merge Sort.");
+  if (!algoritmosPassoAPasso[tipo]) {
+    alert("Passo a passo disponível apenas para algoritmos com suporte.");
     return;
   }
 
   if (!generator) {
-    generator = tipo === "bubble"
-      ? bubbleSortStep([...array], desenharArray, 0)
-      : mergeSortStep([...array], desenharArray, 0);
+    generator = algoritmosPassoAPasso[tipo]([...array]);
   }
 
   const { value, done } = await generator.next();
@@ -138,8 +156,10 @@ document.getElementById("passo").onclick = async () => {
     alert("Ordenação concluída!");
     generator = null;
     if (value) array = value;
+    desenharArray(array);
   } else if (value) {
     array = value;
+    desenharArray(array);
   }
 };
 

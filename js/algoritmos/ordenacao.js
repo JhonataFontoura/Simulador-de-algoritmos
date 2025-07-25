@@ -1,41 +1,38 @@
-/**
- * Função utilitária para criar uma pausa (delay) em milissegundos.
- * @param {number} ms - Tempo em milissegundos para pausar.
- * @returns {Promise<void>} Promessa que resolve após o tempo.
- */
+// Função utilitária para criar delay (pausa)
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**
- * Async generator para Bubble Sort que permite executar o algoritmo passo a passo.
- * A cada passo, o array é yieldado para visualização.
- * @param {number[]} arr - Array de números para ordenar.
- * @param {function} desenhar - Função para atualizar visualização do array.
- * @param {number} delayTime - Tempo de pausa entre passos para animação (ms).
- * @yields {number[]} Estado atual do array a cada passo.
+ * Bubble Sort passo a passo (async generator).
+ * A cada passo, retorna o estado atual do array.
+ * @param {number[]} arr - Array a ser ordenado.
+ * @param {function} desenhar - Função para atualizar visualização.
+ * @param {number} delayTime - Tempo de pausa entre passos (ms).
+ * @yields {number[]} Estado atual do array.
  */
 export async function* bubbleSortStep(arr, desenhar, delayTime = 800) {
   const n = arr.length;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n - i - 1; j++) {
+      desenhar([...arr], j, j + 1);
       if (arr[j] > arr[j + 1]) {
         // Troca elementos adjacentes fora de ordem
         [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
         desenhar([...arr], j, j + 1);
       }
-      yield [...arr]; // Pausa e retorna o estado atual do array
-      if (delayTime > 0) await delay(delayTime); // Pausa para animação se delay > 0
+      yield [...arr];
+      if (delayTime > 0) await delay(delayTime);
     }
   }
 }
 
 /**
- * Async generator para Merge Sort que permite passo a passo via generators internos.
- * @param {number[]} array - Array de números para ordenar.
- * @param {function} desenhar - Função para atualizar visualização do array.
+ * Merge Sort passo a passo (async generator).
+ * @param {number[]} array - Array a ser ordenado.
+ * @param {function} desenhar - Função para atualizar visualização.
  * @param {number} delayTime - Tempo de pausa entre passos (ms).
- * @yields {number[]} Estado atual do array em cada passo do merge.
+ * @yields {number[]} Estado atual do array.
  */
 export async function* mergeSortStep(array, desenhar, delayTime = 800) {
   yield* dividir(array, 0, array.length - 1, desenhar, delayTime);
@@ -94,8 +91,7 @@ async function* mesclar(array, esquerda, meio, direita, desenhar, delayTime) {
       esquerda: indicesEsquerda,
       direita: indicesDireita
     });
-
-    yield [...array]; // pausa para o passo a passo
+    yield [...array];
     if (delayTime > 0) await delay(delayTime);
     k++;
   }
@@ -123,4 +119,42 @@ async function* mesclar(array, esquerda, meio, direita, desenhar, delayTime) {
     if (delayTime > 0) await delay(delayTime);
     k++;
   }
+}
+
+/**
+ * Quick Sort passo a passo (async generator).
+ * @param {number[]} arr - Array a ser ordenado.
+ * @param {function} desenhar - Função para atualizar visualização.
+ * @param {number} delayTime - Tempo de pausa entre passos (ms).
+ * @yields {number[]} Estado atual do array.
+ */
+export async function* quickSortStep(arr, desenhar, delayTime = 300) {
+  async function* quickSortInterno(inicio, fim) {
+    if (inicio >= fim) return;
+
+    const pivo = arr[fim];
+    let i = inicio - 1;
+
+    for (let j = inicio; j < fim; j++) {
+      desenhar(arr, j, inicio, fim, -1, { esquerda: [i + 1], direita: [j] });
+      await delay(delayTime);
+
+      if (arr[j] < pivo) {
+        i++;
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+        yield [...arr];
+      }
+    }
+
+    [arr[i + 1], arr[fim]] = [arr[fim], arr[i + 1]];
+    desenhar(arr, i + 1, inicio, fim, -1, { esquerda: [i + 1], direita: [fim] });
+    await delay(delayTime);
+    yield [...arr];
+
+    yield* quickSortInterno(inicio, i);
+    yield* quickSortInterno(i + 2, fim);
+  }
+
+  yield* quickSortInterno(0, arr.length - 1);
+  return arr;
 }
